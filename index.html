@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UGC by Jasmine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#F4F1EB;
+    --card:#EAE5DB;
+    --stone:#D9D1C0;
+    --stone-dark:#8A8172;
+    --charcoal:#221F1B;
+    --ink:#4A453C;
+    --sage:#6B7A5E;
+    --sage-deep:#4C5A41;
+    --line:#DDD6C7;
+    --shadow: 0 10px 30px -12px rgba(34,31,27,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ivory);
+    color:var(--charcoal);
+    font-family:'Inter',sans-serif;
+    font-weight:300;
+    overflow-x:hidden;
+  }
+  .serif{font-family:'Fraunces',serif;}
+  .wrap{max-width:1280px;margin:0 auto;padding:0 6vw;}
+  .kicker{
+    font-size:.72rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--sage-deep);
+    font-weight:500;
+    margin-bottom:14px;
+    display:block;
+  }
+
+  /* NAV */
+  nav{
+    position:fixed;top:0;left:0;right:0;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:22px 6vw;
+    z-index:50;
+    background:rgba(244,241,235,.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid transparent;
+    transition:border-color .3s;
+  }
+  nav .mark{font-family:'Fraunces',serif;font-style:italic;font-weight:500;font-size:1.25rem;color:var(--charcoal);letter-spacing:.01em;}
+  nav .navlinks{display:flex;align-items:center;gap:32px;}
+  nav a, nav span[data-scroll]{color:var(--ink);text-decoration:none;font-size:.82rem;letter-spacing:.04em;transition:color .2s;cursor:pointer;}
+  nav span[data-scroll]:hover{color:var(--sage-deep);}
+  nav a:hover{color:var(--sage-deep);}
+  nav .cta-btn{
+    background:var(--charcoal);color:#fff !important;
+    padding:10px 22px;border-radius:100px;
+    font-size:.78rem;letter-spacing:.03em;
+  }
+  nav .cta-btn:hover{background:var(--sage-deep);}
+
+  /* HERO */
+  header.hero{
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    align-items:center;
+    position:relative;
+    padding-top:60px;
+  }
+  .hero-copy{padding:0 6vw;z-index:2;}
+  .hero-copy h1{
+    font-size:clamp(4rem,9vw,7.6rem);
+    font-weight:500;
+    line-height:.94;
+    color:var(--charcoal);
+    letter-spacing:-.01em;
+  }
+  .hero-copy p{
+    max-width:440px;
+    margin-top:28px;
+    font-size:1.05rem;
+    line-height:1.75;
+    color:var(--ink);
+  }
+  .hero-copy p.lede{
+    font-size:1.15rem;
+    color:var(--charcoal);
+    font-weight:400;
+  }
+  .hero-social{margin-top:40px;display:flex;flex-direction:column;gap:16px;}
+  .hero-social a{
+    display:flex;align-items:center;gap:14px;
+    color:var(--charcoal);text-decoration:none;font-size:.95rem;
+    transition:color .2s;
+  }
+  .hero-social a:hover{color:var(--sage-deep);}
+  .icon{
+    width:36px;height:36px;border-radius:50%;
+    border:1px solid var(--stone);
+    background:#fff;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .icon svg{width:15px;height:15px;stroke:var(--charcoal);fill:none;}
+
+  .hero-photo-wrap{
+    position:relative;
+    height:100vh;
+    display:flex;align-items:flex-end;justify-content:center;
+  }
+  .hero-photo-wrap .backdrop{
+    position:absolute;
+    right:8%;
+    top:14%;
+    width:74%;
+    height:72%;
+    border-radius:50%;
+    background:linear-gradient(160deg,var(--stone) 0%,var(--stone-dark) 100%);
+    opacity:.4;
+  }
+  .photo-placeholder{
+    position:relative;
+    z-index:2;
+    width:78%;
+    max-width:480px;
+    aspect-ratio:3/4;
+    margin-bottom:0;
+    border-radius:16px 16px 0 0;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+    color:var(--sage-deep);
+  }
+  .photo-placeholder img{
+    width:100%;height:100%;object-fit:cover;object-position:top center;
+  }
+  .photo-placeholder .glyph{
+    width:48px;height:48px;border-radius:50%;
+    border:1.5px solid var(--sage-deep);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces',serif;font-style:italic;font-size:1.15rem;
+  }
+  .photo-placeholder span{font-size:.78rem;letter-spacing:.03em;color:var(--ink);}
+
+  .scroll-note{
+    position:absolute;
+    right:0;
+    top:8%;
+    writing-mode:vertical-rl;
+    font-family:'Fraunces',serif;font-style:italic;
+    font-size:1rem;
+    color:var(--ink);
+    letter-spacing:.02em;
+  }
+
+  /* SECTION HEADERS */
+  .section{padding:110px 0 44px;}
+  .section-head{
+    display:flex;align-items:flex-end;justify-content:space-between;
+    margin-bottom:48px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:24px;
+  }
+  .section h2{
+    font-size:clamp(2.4rem,4.6vw,3.4rem);
+    font-weight:500;
+    font-style:italic;
+    color:var(--charcoal);
+    line-height:1;
+  }
+  .section-count{font-size:.8rem;color:var(--ink);letter-spacing:.03em;padding-bottom:6px;}
+
+  /* GRID */
+  .grid4{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+  }
+  .card{
+    aspect-ratio:3/4.6;
+    border-radius:10px;
+    background:linear-gradient(150deg,#EDE9E0,#D9D2C3);
+    position:relative;
+    overflow:hidden;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 18px -10px rgba(34,31,27,.25);
+    transition:transform .3s ease, box-shadow .3s ease;
+  }
+  .card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 16px 32px -14px rgba(34,31,27,.35);
+  }
+  .card::after{
+    content:"";
+    position:absolute;inset:0;
+    background:radial-gradient(circle at 50% 40%, rgba(255,255,255,.15), transparent 60%);
+    pointer-events:none;
+  }
+  .play{
+    width:52px;height:52px;border-radius:50%;
+    background:rgba(34,31,27,.6);
+    display:flex;align-items:center;justify-content:center;
+    z-index:2;
+  }
+  .play svg{width:16px;height:16px;fill:#fff;margin-left:2px;}
+  .card .tag{
+    position:absolute;bottom:14px;left:14px;
+    font-size:.72rem;color:#fff;letter-spacing:.03em;z-index:3;
+    background:rgba(34,31,27,.55);
+    padding:5px 12px;border-radius:100px;
+    pointer-events:none;
+    backdrop-filter:blur(4px);
+  }
+  .intro-card{
+    grid-column:1 / -1;
+    aspect-ratio:16/9;
+    max-width:760px;
+  }
+  .card video{border-radius:10px;}
+  .intro-card video{border-radius:10px;}
+
+  @media(max-width:900px){
+    .grid4{grid-template-columns:repeat(2,1fr);}
+    header.hero{grid-template-columns:1fr;}
+    .hero-copy{order:2;padding-top:40px;padding-bottom:80px;}
+    .hero-photo-wrap{order:1;height:70vh;}
+    .scroll-note{display:none;}
+    nav .navlinks span[data-scroll]:not(.cta-btn){display:none;}
+  }
+
+  /* CLOSING CTA */
+  .cta{
+    margin-top:140px;
+    position:relative;
+    min-height:70vh;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--charcoal);
+    border-radius:28px;
+    overflow:hidden;
+    padding:80px 6vw;
+  }
+  .cta-content{
+    max-width:640px;
+    text-align:center;
+  }
+  .cta-content .kicker{color:#B7AE9C;display:block;text-align:center;}
+  .cta-content h2{
+    font-size:clamp(3rem,7vw,5.2rem);
+    font-style:italic;font-weight:500;
+    color:#fff;
+    margin-bottom:44px;
+    line-height:1.05;
+  }
+  .cta-content .row{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:18px;font-size:1.05rem;}
+  .cta-content .row a{color:#F4F1EB;}
+  .cta-content .icon{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);}
+  .cta-content .icon svg{stroke:#F4F1EB;}
+
+  @media(max-width:900px){
+    .cta{min-height:auto;padding:64px 32px;border-radius:20px;}
+  }
+
+  footer{
+    padding:32px 6vw 40px;
+    display:flex;justify-content:space-between;
+    font-size:.75rem;color:var(--ink);
+  }
+  footer a, footer span[data-scroll]{color:var(--ink);text-decoration:none;margin-right:20px;cursor:pointer;}
+  footer span[data-scroll]:hover{color:var(--sage-deep);}
+  footer a:hover{color:var(--sage-deep);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="mark">jasmine</div>
+  <div class="navlinks">
+    <span data-scroll="tech">tech &amp; saas</span>
+    <span data-scroll="blog">personal blog</span>
+    <span data-scroll="contact" class="cta-btn">Work with me</span>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-copy">
+    <span class="kicker">UGC Creator</span>
+    <h1 class="serif">I'm<br>Jasmine</h1>
+    <p class="lede">UGC creator specialising in tech, apps &amp; SaaS. I turn products into honest, scroll-stopping stories that convert.</p>
+    <p>Before UGC, I spent 3 years in SMM, so I bring real marketing knowledge to every video; not just filming, but understanding what actually sells. I've worked through Fiverr and directly on Instagram.</p>
+    <div class="hero-social">
+      <a href="https://www.instagram.com/ugcjasmine" target="_blank" rel="noopener"><span class="icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></span> @ugcjasmine</a>
+      <a href="mailto:kjasmine.communic@gmail.com"><span class="icon"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z" opacity="0"/><path d="M20 4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v16l8-4 8 4z"/></svg></span> kjasmine.communic@gmail.com</a>
+    </div>
+  </div>
+  <div class="hero-photo-wrap">
+    <div class="scroll-note">Scroll to see my portfolio &amp; work with me</div>
+    <div class="backdrop"></div>
+    <div class="photo-placeholder">
+      <img src="assets/hero-photo.jpg" alt="Jasmine">
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="work">
+
+  <section class="section" id="intro">
+    <div class="section-head">
+      <div><span class="kicker">Meet me</span><h2 class="serif">Introduction</h2></div>
+    </div>
+    <div class="grid4">
+      <div class="card intro-card">
+        <video controls preload="metadata" poster="assets/intro-poster.jpg" style="width:100%;height:100%;object-fit:cover;">
+          <source src="assets/introduction.mp4" type="video/mp4">
+        </video>
+        <div class="tag">intro video</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="tech">
+    <div class="section-head">
+      <div><span class="kicker">Portfolio</span><h2 class="serif">Tech, apps &amp; SaaS</h2></div>
+      <div class="section-count">7 videos</div>
+    </div>
+    <div class="grid4">
+      <div class="card">
+        <video controls preload="metadata" poster="assets/trendy_app-poster.jpg" style="width:100%;height:100%;object-fit:cover;">
+          <source src="assets/trendy_app.mp4" type="video/mp4">
+        </video>
+        <div class="tag">content planning app</div>
+      </div>
+      <div class="card">
+        <video controls preload="metadata" poster="assets/boba_ai_website-poster.jpg" style="width:100%;height:100%;object-fit:cover;">
+          <source src="assets/boba_ai_website.mp4" type="video/mp4">
+        </video>
+        <div class="tag">AI group chat app</div>
+      </div>
+      <div class="card">
+        <video controls preload="metadata" poster="assets/tech-3-poster.jpg" style="width:100%;height:100%;object-fit:cover;">
+          <source src="assets/tech-3.mp4" type="video/mp4">
+        </video>
+        <div class="tag">language AI app</div>
+      </div>
+      <div class="card">
+        <video controls preload="metadata" poster="assets/lang-1-poster.jpg" style="width:100%;height:100%;object-fit:cover;">
+          <source src="assets/lang-1.mp4" type="video/mp4">
+        </video>
+        <div class="tag">language learning app</div>
+      </div>
+    </div>
+    <div class="grid4" style="margin-top:20px;">
+      <div class="card">
+        <video controls preload="metadata" poster="assets/lang-2-poster.jpg" style="width:100%;height:100%;object-fit:cover;">
+          <source src="assets/lang-2.mp4" type="video/mp4">
+        </video>
+        <div class="tag">language learning app</div>
+      </div>
+      <div class="card">
+        <video controls preload="metadata" poster="assets/lang-3-poster.jpg" style="width:100%;height:100%;object-fit:cover;">
+          <source src="assets/lang-3.mp4" type="video/mp4">
+        </video>
+        <div class="tag">language learning app</div>
+      </div>
+      <div class="card">
+        <video controls preload="metadata" poster="assets/russian_ads-poster.jpg" style="width:100%;height:100%;object-fit:cover;">
+          <source src="assets/russian_ads.mp4" type="video/mp4">
+        </video>
+        <div class="tag">eSIM brand ad</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="blog">
+    <div class="section-head">
+      <div><span class="kicker">Behind the scenes</span><h2 class="serif">Personal blog</h2></div>
+      <div class="section-count">6 videos</div>
+    </div>
+    <div class="grid4">
+      <div class="card">
+        <video controls preload="metadata" poster="assets/platform-poster.jpg" style="width:100%;height:100%;object-fit:cover;">
+          <source src="assets/platform.mp4" type="video/mp4">
+        </video>
+        <div class="tag">my first $1k in UGC</div>
+      </div>
+      <div class="card">
+        <video controls preload="metadata" poster="assets/video-40833-poster.jpg" style="width:100%;height:100%;object-fit:cover;">
+          <source src="assets/video-40833.mp4" type="video/mp4">
+        </video>
+        <div class="tag">90% never make their first 1k</div>
+      </div>
+      <div class="card">
+        <video controls preload="metadata" poster="assets/relationship-poster.jpg" style="width:100%;height:100%;object-fit:cover;">
+          <source src="assets/relationship.mp4" type="video/mp4">
+        </video>
+        <div class="tag">long-distance relationship</div>
+      </div>
+      <div class="card">
+        <video controls preload="metadata" poster="assets/little_brother-poster.jpg" style="width:100%;height:100%;object-fit:cover;">
+          <source src="assets/little_brother.mp4" type="video/mp4">
+        </video>
+        <div class="tag">my little brother's growth</div>
+      </div>
+    </div>
+    <div class="grid4" style="margin-top:20px;">
+      <div class="card">
+        <video controls preload="metadata" poster="assets/personal_brand-poster.jpg" style="width:100%;height:100%;object-fit:cover;">
+          <source src="assets/personal_brand.mp4" type="video/mp4">
+        </video>
+        <div class="tag">dating a foreigner</div>
+      </div>
+      <div class="card">
+        <video controls preload="metadata" poster="assets/personal_brand_2-poster.jpg" style="width:100%;height:100%;object-fit:cover;">
+          <source src="assets/personal_brand_2.mp4" type="video/mp4">
+        </video>
+        <div class="tag">studying abroad</div>
+      </div>
+    </div>
+  </section>
+
+
+
+</main>
+
+<div class="wrap">
+<section class="cta" id="contact">
+  <div class="cta-content">
+    <span class="kicker">Get in touch</span>
+    <h2 class="serif">Let's work together</h2>
+    <div class="row"><span class="icon"><svg viewBox="0 0 24 24"><path d="M20 4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v16l8-4 8 4z"/></svg></span> <a href="mailto:kjasmine.communic@gmail.com" style="text-decoration:none;">kjasmine.communic@gmail.com</a></div>
+    <div class="row"><span class="icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></span> <a href="https://www.instagram.com/ugcjasmine" target="_blank" rel="noopener" style="text-decoration:none;">@ugcjasmine</a></div>
+  </div>
+</section>
+</div>
+
+<footer>
+  <div><span data-scroll="tech">tech &amp; saas</span><span data-scroll="blog">personal blog</span><span data-scroll="contact">work with me</span></div>
+  <div>&copy; Jasmine UGC</div>
+</footer>
+
+<script>
+  document.querySelectorAll('[data-scroll]').forEach(function(link){
+    link.addEventListener('click', function(e){
+      e.preventDefault();
+      var id = link.getAttribute('data-scroll');
+      var target = document.getElementById(id);
+      if(target){ target.scrollIntoView({behavior:'smooth', block:'start'}); }
+    });
+  });
+</script>
+
+</body>
+</html>
